@@ -227,18 +227,28 @@ class Objective():
     def central_obj(self, u):
         if self.notion == 0:  ## the basic fairness notion, uTQu + f1
             return self.alpha * self.quad(u) + \
-                self.alpha * self.fairness(u)
+                self.alpha * self.fairness(u) - \
+                self.beta * self.obstacle(u) - \
+                self.beta * self.avoid_constraint(u)
         elif self.notion == 1:  ## no fairness, uTQu only
-            return self.alpha * self.quad(u)
+            return self.alpha * self.quad(u) - \
+                self.beta * self.obstacle(u) - \
+                self.beta * self.avoid_constraint(u)
         elif self.notion == 2:  # no fairness, no uTQu term
             return 0
         elif self.notion == 3:  # use surge fairness
             return self.alpha * self.quad(u) + \
-                self.alpha * self.surge_fairness(u)
+                self.alpha * self.surge_fairness(u) - \
+                self.beta * self.obstacle(u) - \
+                self.beta * self.avoid_constraint(u)
         elif self.notion == 4:  #f1 only
-            return self.alpha * self.fairness(u)
-        else:  # f4 only
-            return self.alpha * self.surge_fairness(u)
+            return self.alpha * self.fairness(u) - \
+                self.beta * self.obstacle(u) - \
+                self.beta * self.avoid_constraint(u)
+        else:  # f2 only
+            return self.alpha * self.surge_fairness(u) - \
+                self.beta * self.obstacle(u) - \
+                self.beta * self.avoid_constraint(u)
 
     def avoid_constraint(self, u, grad=False, dyn='simple'):
         if grad:
